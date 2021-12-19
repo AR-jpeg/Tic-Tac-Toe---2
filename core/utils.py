@@ -48,7 +48,7 @@ def printGameBoard(board: List[List[str]], color=BLUE) -> None:
     for row in board:
         for index, char in enumerate(row):
             if index == 0:
-                print(colorama.Back.RED + colorama.Fore.BLUE + "| ", end="")
+                print(colorama.Fore.BLUE + "| ", end="")
 
             print(colorama.Fore.LIGHTBLUE_EX + char, end="")
             if index != len(row):

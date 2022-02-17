@@ -1,5 +1,8 @@
-from getkey import getkey, keys
+from getkey import getkey
 
 key = getkey()
-if key == keys.UP:
-    print("You pressed UP!")
+# if key == keys.UP:
+#     print("You pressed UP!")
+
+print(key)
+print('test')

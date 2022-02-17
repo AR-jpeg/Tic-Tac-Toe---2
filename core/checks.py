@@ -1,4 +1,5 @@
-from typing import List, Literal, Tuple, Union
+from typing import List, Tuple
+from .errors import SqareOutOfBoundsError, SquareAlreadyTakenError
 from .gloabals import EMPTY
 
 def getValidPositions(board: List[List[str]]) -> List[Tuple[int, int]]:
@@ -15,10 +16,10 @@ def isMoveValid(board: List[List[str]], move: Tuple[int, int]) -> bool:
     moveG, moveC = move
 
     if moveG > len(board)-1 or moveC > len(board[moveG])-1:
-        return False
+        raise SqareOutOfBoundsError
 
     if board[moveG][moveC] != EMPTY:
-        return False
+        raise SquareAlreadyTakenError
     
     return True
 
@@ -72,4 +73,4 @@ def gameOver(board: List[List[str]]):
         if allElementsSame(pattern):
             return True, pattern[0]
     
-    return False
+    return False, ""

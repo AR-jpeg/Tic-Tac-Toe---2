@@ -1,5 +1,5 @@
 from .gloabals import EMPTY, RED, GREEN, WHITE, BLUE
-from .errors import SquareAlreadyTakenError
+from .errors import SquareAlreadyTakenError, SqareOutOfBoundsError
 from .checks import isMoveValid
 from typing import List, Tuple
 import colorama
@@ -11,7 +11,20 @@ def convertFromZeroBased(move: Tuple[int, int]):
 def convertFromOneBased(move: Tuple[int, int]):
     return (move[0]-1, move[1]-1)
 
-def fancyInput(text: str, color, resultType=object, end=""):
+def convertListToString(l: List) -> str:
+    res = ""
+    for e in l:
+        res += str(e)
+
+    return res
+
+def createSubStrings(s, maxLen: int) -> List[str]:
+    if type(s) == list:
+        s = convertListToString(s)
+    
+
+
+def fancyInput(text: str, color, resultType=object, end="", allowedValues=[]):
     print(color + text + WHITE, end="")
 
     while True:
@@ -74,9 +87,14 @@ def createGameBoard(size: int) -> List[List[str]]:
     return board
 
 def setMove(board: List[List[str]], move: Tuple[int, int], charToSet: str):
-    if not isMoveValid(board, move):
-        fancyPrint(f"Move at {convertFromZeroBased(move)} was not valid, the selected square was already taken", RED)
+    try:
+        isMoveValid(board, move)
+    except SquareAlreadyTakenError:
+        fancyPrint(f"Move at {convertFromZeroBased(move)} was not valid, the selected square was already taken. Please try again.", RED)
         raise SquareAlreadyTakenError
+    except SqareOutOfBoundsError:
+        fancyPrint(f'Move at {convertFromZeroBased(move)} was not valid, the move was out of bounds. Please try again.', RED)
+        raise SqareOutOfBoundsError
     
     board[move[0]][move[1]] = charToSet
     fancyPrint(f"Succesfully set the square at {convertFromZeroBased(move)} to {charToSet}!", GREEN)

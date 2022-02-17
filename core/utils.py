@@ -11,7 +11,7 @@ def convertFromZeroBased(move: Tuple[int, int]):
 def convertFromOneBased(move: Tuple[int, int]):
     return (move[0]-1, move[1]-1)
 
-def fancyInput(text: str, color, resultType=object, end: str = ""):
+def fancyInput(text: str, color, resultType=object, end=""):
     print(color + text + WHITE, end="")
 
     while True:
@@ -36,10 +36,8 @@ def fancyInput(text: str, color, resultType=object, end: str = ""):
             fancyPrint("Oh no, the expected type of the input was " +
                        str(resultType) + ". Please try again! ", RED, end="")
 
-
-def fancyPrint(text: str, color, end: str = "\n") -> None:
+def fancyPrint(text: str, color, end="\n") -> None:
     print(color + text + WHITE, end=end)
-
 
 def printGameBoard(board: List[List[str]], color=BLUE) -> None:
     """Prints the game board out in a default color of blue.
@@ -58,14 +56,13 @@ def printGameBoard(board: List[List[str]], color=BLUE) -> None:
             if index == 0:
                 print(colorama.Fore.BLUE + "| ", end="")
 
-            print(colorama.Fore.LIGHTBLUE_EX + char, end="")
+            print(colorama.Fore.LIGHTBLUE_EX + str(char), end="")
             if index != len(row):
                 print(colorama.Fore.BLUE+" | ", end="")
 
         print()
 
     print("-" + ('-' * len(board)*4)+colorama.Fore.WHITE)
-
 
 def createGameBoard(size: int) -> List[List[str]]:
     board: List[List[str]] = []

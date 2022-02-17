@@ -1,7 +1,15 @@
+from .gloabals import EMPTY, RED, GREEN, WHITE, BLUE
+from .errors import SquareAlreadyTakenError
+from .checks import isMoveValid
+from typing import List, Tuple
+import colorama
 import os
-from typing import List
-from .gloabals import *
 
+def convertFromZeroBased(move: Tuple[int, int]):
+    return (move[0]+1, move[1]+1)
+
+def convertFromOneBased(move: Tuple[int, int]):
+    return (move[0]-1, move[1]-1)
 
 def fancyInput(text: str, color, resultType=object, end: str = ""):
     print(color + text + WHITE, end="")
@@ -64,10 +72,20 @@ def createGameBoard(size: int) -> List[List[str]]:
     for i in range(size):
         board.append([])
         for k in range(size):
-            board[i].append("_")
+            board[i].append(EMPTY)
 
     return board
 
+def setMove(board: List[List[str]], move: Tuple[int, int], charToSet: str):
+    if not isMoveValid(board, move):
+        fancyPrint(f"Move at {convertFromZeroBased(move)} was not valid, the selected square was already taken", RED)
+        raise SquareAlreadyTakenError
+    
+    board[move[0]][move[1]] = charToSet
+    fancyPrint(f"Succesfully set the square at {convertFromZeroBased(move)} to {charToSet}!", GREEN)
+    
+    return
 
 def clearScreen() -> None:
     os.system("clear")
+

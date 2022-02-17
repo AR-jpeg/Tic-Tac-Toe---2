@@ -1,0 +1,2 @@
+class SquareAlreadyTakenError(Exception):
+    pass

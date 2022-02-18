@@ -1,4 +1,4 @@
-from .gloabals import EMPTY, RED, GREEN, WHITE, BLUE
+from .gloabals import EMPTY, RED, GREEN, WHITE, BLUE, ORANGE
 from .errors import SquareAlreadyTakenError, SqareOutOfBoundsError
 from .checks import isMoveValid
 from typing import List, Tuple
@@ -30,7 +30,7 @@ def fancyInput(text: str, color, resultType=object, end="", allowedValues=[]):
     while True:
         try:
             result = input()
-        except KeyboardInterrupt:
+        except (KeyboardInterrupt, EOFError):
             print()
             leave = fancyInput("Do you want to quit? ", RED, str, allowedValues=['yes', 'no', 'y', 'n'])
 
@@ -39,46 +39,35 @@ def fancyInput(text: str, color, resultType=object, end="", allowedValues=[]):
                 fancyPrint("Thank you for playing!", GREEN)
                 quit()
 
-            print('uhh')
-
-            print('uhhh')
+            fancyPrint(text, color)
             continue
-        else:
-            if result not in allowedValues and allowedValues != []:
-                fancyPrint(f"Your input {result} was not a valid input, please enter an" )
 
-            if result == "exit" or result == "leave" or result == "l":
-                leave = fancyInput("Are you sure you want to leave (y/n)? ",
-                                color=RED, resultType=str)
+        if result not in allowedValues and allowedValues != []:
+            result = fancyInput(f"Your input '{result}' was not a valid input, please enter something like '{allowedValues[0]}'. ", RED, resultType, end, allowedValues)
 
-                if leave == "yes" or leave == "y":
-                    clearScreen()
-                    fancyPrint("Thank you for playing! ", GREEN)
-                    quit()
 
-                else:
-                    continue
+        if result == "exit" or result == "leave" or result == "l":
+            leave = fancyInput("Are you sure you want to leave (y/n)? ",
+                            color=RED, resultType=str)
 
-            try:
-                return resultType(result)
+            if leave == "yes" or leave == "y":
+                clearScreen()
+                fancyPrint("Thank you for playing! ", GREEN)
+                quit()
 
-            except:
-                fancyPrint("Oh no, the expected type of the input was " +
-                        str(resultType) + ". Please try again! ", RED, end="")
+            else:
+                continue
+
+        try:
+            return resultType(result)
+
+        except:
+            fancyPrint(f"Oh no, the expected type of the input was '{str(resultType)[8:-2]}'. Please try again! ", RED, end="")
 
 def fancyPrint(text: str, color, end="\n") -> None:
     print(color + text + WHITE, end=end)
 
 def printGameBoard(board: List[List[str]], color=BLUE) -> None:
-    """Prints the game board out in a default color of blue.
-
-    Arguments:
-        board -- The game board to be printed out
-
-    Keyword Arguments:
-        color -- The color that the game board will be printed in (default: {BLUE})
-    """
-
     print(colorama.Fore.BLUE+"-" + ('-' * len(board)*4))
 
     for row in board:

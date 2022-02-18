@@ -28,26 +28,43 @@ def fancyInput(text: str, color, resultType=object, end="", allowedValues=[]):
     print(color + text + WHITE, end="")
 
     while True:
-        result = input()
+        try:
+            result = input()
+        except KeyboardInterrupt:
+            print()
+            leave = fancyInput("Do you want to quit? ", RED, str, allowedValues=['yes', 'no', 'y', 'n'])
 
-        if result == "exit" or result == "leave" or result == "l":
-            leave = fancyInput("Are you sure you want to leave (y/n)? ",
-                               color=RED, resultType=str)
-
-            if leave == "yes" or leave == "y":
+            if leave in ['y', 'yes']:
                 clearScreen()
-                fancyPrint("Thank you for playing! ", GREEN)
+                fancyPrint("Thank you for playing!", GREEN)
                 quit()
 
-            else:
-                continue
+            print('uhh')
 
-        try:
-            return resultType(result)
+            print('uhhh')
+            continue
+        else:
+            if result not in allowedValues and allowedValues != []:
+                fancyPrint(f"Your input {result} was not a valid input, please enter an" )
 
-        except:
-            fancyPrint("Oh no, the expected type of the input was " +
-                       str(resultType) + ". Please try again! ", RED, end="")
+            if result == "exit" or result == "leave" or result == "l":
+                leave = fancyInput("Are you sure you want to leave (y/n)? ",
+                                color=RED, resultType=str)
+
+                if leave == "yes" or leave == "y":
+                    clearScreen()
+                    fancyPrint("Thank you for playing! ", GREEN)
+                    quit()
+
+                else:
+                    continue
+
+            try:
+                return resultType(result)
+
+            except:
+                fancyPrint("Oh no, the expected type of the input was " +
+                        str(resultType) + ". Please try again! ", RED, end="")
 
 def fancyPrint(text: str, color, end="\n") -> None:
     print(color + text + WHITE, end=end)

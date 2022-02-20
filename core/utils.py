@@ -1,7 +1,7 @@
 from .gloabals import EMPTY, RED, GREEN, WHITE, BLUE, ORANGE
 from .errors import SquareAlreadyTakenError, SqareOutOfBoundsError
 from .checks import isMoveValid
-from typing import List, Tuple
+from typing import Dict, List, Tuple
 import colorama
 import os
 
@@ -21,10 +21,22 @@ def convertListToString(l: List) -> str:
 def createSubStrings(s, maxLen: int) -> List[str]:
     if type(s) == list:
         s = convertListToString(s)
+
+    res: List[str] = []
+
+    for i in range(0, len(s)+1):
+        for j in range(i, len(s)+1):
+            if len(s[i:j]) != maxLen:
+                continue
+            
+            res.append(s[i:j])
+
+    return res
+
     
 
 
-def fancyInput(text: str, color, resultType=object, end="", allowedValues=[]):
+def fancyInput(text: str, color, resultType=None, end="", allowedValues=[]):
     print(color + text + WHITE, end="")
 
     while True:
@@ -57,6 +69,9 @@ def fancyInput(text: str, color, resultType=object, end="", allowedValues=[]):
 
             else:
                 continue
+
+        if resultType == None:
+            return result
 
         try:
             return resultType(result)
@@ -106,6 +121,13 @@ def setMove(board: List[List[str]], move: Tuple[int, int], charToSet: str):
     fancyPrint(f"Succesfully set the square at {convertFromZeroBased(move)} to {charToSet}!", GREEN)
     
     return
+
+def itemAlreadyInDictOfList(item, key, l: List[Dict]):
+    for d in l:
+        if d[key] == item:
+            return True, d["name"]
+    
+    return False
 
 def clearScreen() -> None:
     os.system("clear")

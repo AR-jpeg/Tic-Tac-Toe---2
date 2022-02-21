@@ -1,5 +1,6 @@
-from typing import List, Tuple
 from .errors import SqareOutOfBoundsError, SquareAlreadyTakenError
+from .utils import createSubStrings
+from typing import List, Tuple
 from .gloabals import EMPTY
 
 def getValidPositions(board: List[List[str]]) -> List[Tuple[int, int]]:
@@ -35,13 +36,13 @@ def allElementsSame(list: List[object]) -> bool:
 
     return True
 
-def gameOver(board: List[List[str]]):
+def gameOver(board: List[List[str]], sizeToWin: int):
     patternsToCheck = []
 
     for line in board:
         # Add horizontal patterns
-        patternsToCheck.append(line)
-
+        for subPattern in createSubStrings(line, sizeToWin):
+            patternsToCheck.append(subPattern)
 
     # Add the collumns
     collumns: List[List] = []
@@ -52,22 +53,28 @@ def gameOver(board: List[List[str]]):
         for line in board:
             collumns[verticlePointer].append(line[verticlePointer])
 
+    print(collumns)
+
     for collumn in collumns:
-        patternsToCheck.append(collumn)
+        for subPattern in createSubStrings(collumn, sizeToWin):
+            patternsToCheck.append(subPattern)
 
     # Add the top left -> bottom right diagonal
     tl_br_diagonal = []
     for i in range(len(board)):
         tl_br_diagonal.append(board[i][i])
 
-    patternsToCheck.append(tl_br_diagonal)
+    for subPattern in createSubStrings(tl_br_diagonal, sizeToWin):
+        patternsToCheck.append(subPattern)
 
     # Add the bottom left -> top right diagonal
     bl_tr_diagonal = []
     for i in range(len(board)-1, -1,-1):
         bl_tr_diagonal.append(list(reversed(board[i]))[i])
 
-    patternsToCheck.append(bl_tr_diagonal)
+    for subPattern in createSubStrings(bl_tr_diagonal, sizeToWin):
+        patternsToCheck.append(subPattern)
+
 
     for pattern in patternsToCheck:
         if allElementsSame(pattern):

@@ -1,6 +1,4 @@
-from .gloabals import EMPTY, RED, GREEN, WHITE, BLUE, ORANGE
-from .errors import SquareAlreadyTakenError, SqareOutOfBoundsError
-from .checks import isMoveValid
+from .gloabals import EMPTY, RED, GREEN, WHITE, BLUE
 from typing import Dict, List, Tuple
 import colorama
 import os
@@ -17,25 +15,7 @@ def convertListToString(l: List) -> str:
         res += str(e)
 
     return res
-
-def createSubStrings(s, maxLen: int) -> List[str]:
-    if type(s) == list:
-        s = convertListToString(s)
-
-    res: List[str] = []
-
-    for i in range(0, len(s)+1):
-        for j in range(i, len(s)+1):
-            if len(s[i:j]) != maxLen:
-                continue
-            
-            res.append(s[i:j])
-
-    return res
-
     
-
-
 def fancyInput(text: str, color, resultType=None, end="", allowedValues=[]):
     print(color + text + WHITE, end="")
 
@@ -107,20 +87,22 @@ def createGameBoard(size: int) -> List[List[str]]:
 
     return board
 
-def setMove(board: List[List[str]], move: Tuple[int, int], charToSet: str):
-    try:
-        isMoveValid(board, move)
-    except SquareAlreadyTakenError:
-        fancyPrint(f"Move at {convertFromZeroBased(move)} was not valid, the selected square was already taken. Please try again.", RED)
-        raise SquareAlreadyTakenError
-    except SqareOutOfBoundsError:
-        fancyPrint(f'Move at {convertFromZeroBased(move)} was not valid, the move was out of bounds. Please try again.', RED)
-        raise SqareOutOfBoundsError
-    
-    board[move[0]][move[1]] = charToSet
-    fancyPrint(f"Succesfully set the square at {convertFromZeroBased(move)} to {charToSet}!", GREEN)
-    
-    return
+
+def createSubStrings(s, maxLen: int) -> List[str]:
+    if type(s) == list:
+        s = convertListToString(s)
+
+    res: List[str] = []
+
+    for i in range(0, len(s)+1):
+        for j in range(i, len(s)+1):
+            if len(s[i:j]) != maxLen:
+                continue
+            
+            res.append(s[i:j])
+
+    return res
+
 
 def itemAlreadyInDictOfList(item, key, l: List[Dict]):
     for d in l:

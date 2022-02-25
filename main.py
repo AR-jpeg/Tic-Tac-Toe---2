@@ -1,7 +1,8 @@
-import core.gloabals as globals
-import core.utils as utils
-import core.checks as checks
 import core.errors as errors
+from core.checks import isMoveValid, gameOver
+import core.gloabals as globals
+from core.move import setMove
+import core.utils as utils
 from time import sleep
 
 boardSize = utils.fancyInput(
@@ -25,95 +26,114 @@ while minSizeToWin > boardSize or minSizeToWin <= 1:
 numberOfPlayers = utils.fancyInput("How many players will be playing? ", globals.GREEN, int)
 players = []
 
-mainBoard = [
-	[1, 2, 3],	
-	[4, 2, 6],
-	[7, 8, 9]
-]
-
-utils.printGameBoard(mainBoard)
-print(checks.gameOver(mainBoard, minSizeToWin))
-
-# utils.clearScreen()
+utils.clearScreen()
 
 # # Create all players
-# for p in range(0, numberOfPlayers):
-# 	pSymbol = utils.fancyInput(
-# 		f"Player {p+1}, what symbol do you want to choose? ", globals.GREEN, str
-# 	)
+for p in range(0, numberOfPlayers):
+	pSymbol = utils.fancyInput(
+		f"Player {p+1}, what symbol do you want to choose? ", globals.GREEN, str
+	)
 
-# 	while len(pSymbol) > 1 or utils.itemAlreadyInDictOfList(pSymbol, "symbol", players) or pSymbol == "":
-# 		if len(pSymbol) > 1:
-# 			pSymbol = utils.fancyInput(
-# 				f"Player {p+1}, your symbol, '{pSymbol}' was more than 1 character long, please enter a new symbol. ", globals.RED, str
-# 			)   
+	while len(pSymbol) > 1 or utils.itemAlreadyInDictOfList(pSymbol, "symbol", players) or pSymbol == "":
+		if len(pSymbol) > 1:
+			pSymbol = utils.fancyInput(
+				f"Player {p+1}, your symbol, '{pSymbol}' was more than 1 character long, please enter a new symbol. ", globals.RED, str
+			)   
 
-# 		if utils.itemAlreadyInDictOfList(pSymbol, "symbol", players):
-# 			otherPlayerWithSameName = utils.itemAlreadyInDictOfList(pSymbol, "symbol", players)[1]
-# 			pSymbol = utils.fancyInput(
-# 				f"Player {p+1}, your symbol, '{pSymbol}' was already selected by {otherPlayerWithSameName}. Please choose a new symbol. ",
-# 				globals.RED, str
-# 			)
+		if utils.itemAlreadyInDictOfList(pSymbol, "symbol", players):
+			otherPlayerWithSameName = utils.itemAlreadyInDictOfList(pSymbol, "symbol", players)[1]
+			pSymbol = utils.fancyInput(
+				f"Player {p+1}, your symbol, '{pSymbol}' was already selected by {otherPlayerWithSameName}. Please choose a new symbol. ",
+				globals.RED, str
+			)
 
-# 		if pSymbol == "":
-# 			pSymbol = utils.fancyInput(f"Player {p+1}, the symbol '' is not a valid symbol, please enter a new symbol. ", globals.RED, str)
+		if pSymbol == "":
+			pSymbol = utils.fancyInput(f"Player {p+1}, the symbol '' is not a valid symbol, please enter a new symbol. ", globals.RED, str)
 
-# 	pName = utils.fancyInput(
-# 		f"What is your name? (will default to `Player {p+1}` if nothing is typed in). ", globals.GREEN
-# 	)
+	pName = utils.fancyInput(
+		f"What is your name? (will default to `Player {p+1}` if nothing is typed in). ", globals.GREEN
+	)
 
-# 	while utils.itemAlreadyInDictOfList(pName, "name", players):
-# 		pName = utils.fancyInput(f"The name '{pName}' was already taken, please enter a new name. ", globals.RED, str)
+	while utils.itemAlreadyInDictOfList(pName, "name", players):
+		pName = utils.fancyInput(f"The name '{pName}' was already taken, please enter a new name. ", globals.RED, str)
 
-# 	if pName in ["", " "]:
-# 		pName = f"Player {p+1}"
+	if pName in ["", " "]:
+		pName = f"Player {p+1}"
 
 
-# 	players.append({
-# 		"name": pName,
-# 		"symbol": pSymbol
-# 	})
+	players.append({
+		"name": pName,
+		"symbol": pSymbol
+	})
 
-# 	print()
+	print()
 	
-# 	utils.fancyPrint(f"Sucessfully set {pName}'s symbol to {pSymbol}!", globals.BLUE)
+	utils.fancyPrint(f"Sucessfully set {pName}'s symbol to {pSymbol}!", globals.BLUE)
 
-# 	sleep(1.5)
-# 	utils.clearScreen()
-# 	print(players)
+	sleep(1.5)
+	utils.clearScreen()
+	print(players)
 
-# utils.fancyPrint(f"Sucessfully created a game board with a size of {boardSize} with {numberOfPlayers} players!", globals.GREEN, "\n\n")
-# utils.printGameBoard(mainBoard)
+utils.fancyPrint(f"Sucessfully created a game board with a size of {boardSize} with {numberOfPlayers} players!", globals.GREEN, "\n\n")
+utils.printGameBoard(mainBoard)
+
+stop = False
+
+while not stop:
+	for p in players:
+		if gameOver(mainBoard, minSizeToWin)[0]:
+			utils.clearScreen()
+			utils.printGameBoard(mainBoard)
+
+			utils.fancyPrint(f"{gameOver(mainBoard, minSizeToWin)[1]} won, GG!", globals.GREEN)
+			
+			stop = True
+			break
 
 
+		utils.clearScreen()
 
+		utils.fancyPrint(f"{p['name']}, it is now your turn. \n", globals.BLUE)
+		utils.printGameBoard(mainBoard)
+		print("\n")
 
+		playerGrid = utils.fancyInput("Which row would you like to place your move in? ", globals.GREEN, int) - 1
+		playerCollumn = utils.fancyInput("Which collumn would you like to place your move in? ", globals.GREEN, int) - 1
 
+		playerMove = (playerGrid, playerCollumn)
 
-# while True:
-#     utils.clearScreen()
-#     utils.printGameBoard(mainBoard)
-	
-#     print()
+		# Make sure the move is always valid
+		while True:
+			try:
+				if isMoveValid(mainBoard, playerMove):
+					# Only break once the move was valid
+					break
 
-#     while True:
-#         try:
-#             row = int(utils.fancyInput("What row do you want to place your move in? ", globals.ORANGE, int)-1)
-#             column = int(utils.fancyInput("What column do you want to place your move in? ", globals.ORANGE, int)-1)
+			except errors.SqareOutOfBoundsError:
+				utils.clearScreen()
 
-#             utils.setMove(mainBoard, (row, column), "X")
+				utils.fancyPrint(f"{p['name']}, your move of ({playerGrid+1}, {playerCollumn+1}) " + 
+				"was not a valid move because it was out of bounds, please try entering another move! \n", globals.RED)
 
-#         except errors.SquareAlreadyTakenError:
-#             pass
-#         except errors.SqareOutOfBoundsError:
-#             pass
-#         else: 
-#             break
-	
-#     if checks.gameOver(mainBoard)[0]:
-#         utils.fancyPrint(f"Player {checks.gameOver(mainBoard)[1]} won!", globals.GREEN)
-#         break
+				utils.printGameBoard(mainBoard)
 
-#     sleep(2)
+				playerGrid = utils.fancyInput("Which row would you like to place your move in? ", globals.GREEN, int) - 1
+				playerCollumn = utils.fancyInput("Which collumn would you like to place your move in? ", globals.GREEN, int) - 1
 
-# utils.printGameBoard(mainBoard)
+				playerMove = (playerGrid, playerCollumn)
+
+			except errors.SquareAlreadyTakenError:
+				utils.clearScreen()
+
+				utils.fancyPrint(f"{p['name']}, your move of ({playerGrid+1}, {playerCollumn+1}) " + 
+				"was not a valid move because the square you were trying to move at was already taken, please try entering another move! \n", globals.RED)
+
+				utils.printGameBoard(mainBoard)
+
+				playerGrid = utils.fancyInput("Which row would you like to place your move in? ", globals.GREEN, int) - 1
+				playerCollumn = utils.fancyInput("Which collumn would you like to place your move in? ", globals.GREEN, int) - 1
+
+				playerMove = (playerGrid, playerCollumn)
+
+		# Once the move has been validated, set the move and move on to the next player
+		setMove(mainBoard, playerMove, p['symbol'])

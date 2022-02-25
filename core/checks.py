@@ -53,11 +53,16 @@ def gameOver(board: List[List[str]], sizeToWin: int):
         for line in board:
             collumns[verticlePointer].append(line[verticlePointer])
 
-    print(collumns)
-
     for collumn in collumns:
         for subPattern in createSubStrings(collumn, sizeToWin):
             patternsToCheck.append(subPattern)
+
+    # # Add all of the diagonals
+    # tl_br_diagonal = []
+
+    # for y in range(len(board), -1, -1):
+    #     for x in range(len(board)):
+    #         print(board[y])
 
     # Add the top left -> bottom right diagonal
     tl_br_diagonal = []

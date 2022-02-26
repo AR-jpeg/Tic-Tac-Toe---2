@@ -5,11 +5,12 @@ from core.move import setMove
 import core.utils as utils
 from time import sleep
 
+
+
 boardSize = utils.fancyInput(
 	"What size would you like the game board to be? ", globals.GREEN, int, end="\n")
 mainBoard = utils.createGameBoard(size=boardSize)
 
-# print(utils.fancyInput("test ", globals.RED, resultType=str, allowedValues=["yes", "no"]))
 minSizeToWin = utils.fancyInput("What is the minimum size that you need to win? ", globals.GREEN, int)
 
 while minSizeToWin > boardSize or minSizeToWin <= 1:
@@ -28,7 +29,7 @@ players = []
 
 utils.clearScreen()
 
-# # Create all players
+# Create all players
 for p in range(0, numberOfPlayers):
 	pSymbol = utils.fancyInput(
 		f"Player {p+1}, what symbol do you want to choose? ", globals.GREEN, str

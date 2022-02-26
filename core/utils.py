@@ -114,3 +114,9 @@ def itemAlreadyInDictOfList(item, key, l: List[Dict]):
 def clearScreen() -> None:
     os.system("clear")
 
+def findPlayerWithSymbol(players: List[Dict[str, str]], symbol: str) -> str:
+    for player in players:
+        if player["symbol"] == symbol:
+            return player["name"]
+
+    return -1
